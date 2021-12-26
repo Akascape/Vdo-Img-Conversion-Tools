@@ -1,5 +1,6 @@
 # Vdo-Img-Tools
-<br><b>This is a quick tool that can save you a lot of time. With this tool, you can convert a video file to image sequence and can also do the vice versa!</br>
+<br><b>This is a quick tool that can save you a lot of time. With this tool, you can convert a video file to image sequence and can also do the vice versa!
+</br>
 #How to use?
 <br>•Make sure you have python installed.
 <br>•Download this repository and open any one of the two python program (Vdo-to-Img.py or Img-to-Vdo.py)
