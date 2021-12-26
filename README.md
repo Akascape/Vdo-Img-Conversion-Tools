@@ -1,4 +1,4 @@
-# Vdo-Img-Tools
+# Vdo & Img Tools
 <br><b>This is a quick tool that can save you a lot of time. With this tool, you can convert a video file to image sequence and can also do the vice versa!
 </br>
 # How to use?
