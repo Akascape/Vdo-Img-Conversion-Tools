@@ -1,5 +1,5 @@
 # Vdo & Img Conversion Tools
-<br><b>This is a quick tool made with python that can save you a lot of time. With this tool you can convert a video file to image sequence and can also do the vice versa!
+<br><b>This is a quick conversion tool made with python that can save you a lot of time. With this tool you can extract a image sequence from video file and can also do the reverse!
 </br>
 # How to use?
 <br>•Make sure you have python installed.
