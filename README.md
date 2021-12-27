@@ -3,7 +3,7 @@
 </br>
 # How to use?
 <br>• Make sure you have python installed.
-<br>• Download this repository and run any one of the two python program (Vdo-to-Img.py or Img-to-Vdo.py)
+<br>• Download this repository and run any one of the two python programs (Vdo-to-Img.py or Img-to-Vdo.py)
 <br>• Click on "Yes" if a module not found error pops up so that it can automatically download the required module (OpenCV)
 <br>• When the module gets installed, the program will open.
 <br>• For `Vdo-to-Img Converter`, just choose the video by clicking the OPEN button and then choose the export format (jpg,png,bmp) and click the EXTRACT button. Each frame from the video file will be stored in a separate folder.
