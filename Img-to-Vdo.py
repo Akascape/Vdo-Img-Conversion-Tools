@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter import Tk, Button, Label, ttk, messagebox, filedialog
 import os
 import glob
+import re
 import shutil
 import sys
 import pkg_resources
@@ -55,7 +56,9 @@ def Convert():
                     frameSize = (img.shape)[1::-1]
                     fps=int(exportbox.get())
                     out = cv2.VideoWriter(final,cv2.VideoWriter_fourcc(*'mp4v'), fps, frameSize)
-                    for filename in glob.glob(folder+"/*."+ext):
+                    files=glob.glob(folder+"/*."+ext)
+                    files.sort(key=lambda x:[int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x)])
+                    for filename in files:
                         img = cv2.imread(filename)
                         out.write(img)
                     out.release()
