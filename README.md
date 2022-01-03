@@ -8,6 +8,6 @@
 <br>• Once the module gets installed, the program is ready to use.
 - For `Vdo-to-Img Converter`, just choose the video by clicking the OPEN button and then choose the export format (jpg,png,bmp) and click the EXTRACT button. Each frame from the video file will be stored in a separate folder.
 - For `Img-to-Vdo Converter`, choose the folder that contains the image sequence and choose the FPS and export format, then simply click the CONVERT button. The video will be created with the folder name.
-<br>• You can also use the 🔃 button to switch between the applications.
+- You can also use the 🔃 button to switch between the applications.
 <br><p align='center'>![Screenshot 2021-12-26 22015hj1](https://user-images.githubusercontent.com/89206401/147751123-62c21abb-ccde-4964-b750-ba37b6cd5be2.png)</p>
 # That's all, thanks!
