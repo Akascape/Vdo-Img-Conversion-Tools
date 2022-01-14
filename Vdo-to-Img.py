@@ -53,7 +53,7 @@ def Convert():
                         ret,frame = cam.read()
                         if ret:
                             targetformat=exportbox.get()
-                            name = folder+'/Frame-' + str(currentframe) + "." + targetformat
+                            name = folder+'/Frame-' + (str(currentframe)).zfill(6) + "." + targetformat
                             Log.place(x=140,y=160)
                             Log.config(text="Extracted: Frame-" + str(currentframe))
                             root.update_idletasks()
