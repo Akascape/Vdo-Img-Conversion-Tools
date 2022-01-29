@@ -2,7 +2,7 @@
 <br><b>This is a quick conversion tool made with python that can save you a lot of time. With this tool you can extract image sequence from video file and can also do the reverse!
 </br>
 # How to use?
-<br>• Make sure you have latest python 3 installed.
+• Make sure you have latest python 3 installed.
 <br>• [Download](https://github.com/Akascape/Vdo-Img-Conversion-Tools/archive/refs/heads/main.zip) this repository and after extracting it run any one of the two python programs (Vdo-to-Img.py or Img-to-Vdo.py)
 <br>• Click on "Yes" if a module not found error pops up so that it can automatically download the required module (OpenCV)
 <br>• Once the module gets installed, the program is ready to use.
