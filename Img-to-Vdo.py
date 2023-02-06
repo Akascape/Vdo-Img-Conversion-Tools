@@ -45,7 +45,7 @@ def convert():
     progressbar.grid(row=6, column=1, padx=20, pady=(10,20), sticky="we")
     
     firstitem = os.listdir(folder+"/")[0]
-    ext = os.path.basename(firstitem).split('.')[1]
+    ext = os.path.basename(firstitem).split('.')[-1]
     
     try:
         img = cv2.imread(folder+"/"+firstitem)
