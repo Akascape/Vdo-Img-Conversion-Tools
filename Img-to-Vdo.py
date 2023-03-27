@@ -32,7 +32,7 @@ def convert():
         return
     
     final = tkinter.filedialog.asksaveasfilename(filetypes =[('Video', ['*.mp4','*.avi','*.mov','*.mkv','*gif']),('All Files', '*.*')],
-                                                 initialfile="Untitled."+exportbox.get())
+                                                 initialfile=os.path.basename(folder)+"."+exportbox.get())
     if not final:
         return
     
