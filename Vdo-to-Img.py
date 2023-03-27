@@ -97,6 +97,7 @@ def extract_one_frame():
         return
     
     dialog = ctk.CTkInputDialog(text="Enter Frame Number")
+    dialog.title("Extract Specific Frame")
     frame_num = dialog.get_input()
     
     if frame_num is None or frame_num=="":
