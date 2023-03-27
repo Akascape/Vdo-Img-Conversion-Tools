@@ -6,6 +6,7 @@
 
 - For `Vdo-to-Img Converter`, just choose the video by clicking the `OPEN` button and then choose the export format (jpg,png,bmp) and click the `EXTRACT` button. Each frame from the video file will be saved in a separate folder. You can also extract a specific frame by right clicking on the extract button.
 - For `Img-to-Vdo Converter`, choose the folder that contains the image sequence and also choose the FPS and export format, then simply click the CONVERT button to save and convert it.
+- You can press `Esc` key in order to stop any running conversion process.
 
 <br><p align='center'>![Screenshot](https://user-images.githubusercontent.com/89206401/216770622-821bfc2d-1a63-460d-b006-e036af67ad66.jpg)</p>
 # That's all, thanks!
