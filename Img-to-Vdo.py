@@ -44,15 +44,15 @@ def convert():
     convert_button.configure(state="disabled")
     progressbar.grid(row=6, column=1, padx=20, pady=(10,20), sticky="we")
     
-    firstitem = os.listdir(folder+"/")[0]
+    firstitem = os.listdir(folder)[0]
     ext = os.path.basename(firstitem).split('.')[-1]
     
     try:
-        img = cv2.imread(folder+"/"+firstitem)
+        img = cv2.imread(os.path.join(folder, firstitem))
         frameSize = (img.shape)[1::-1]
         fps = int(fps_slider.get())
         out = cv2.VideoWriter(final,cv2.VideoWriter_fourcc(*'mp4v'), fps, frameSize)
-        files = glob.glob(folder+"/*."+ext)                
+        files = glob.glob(os.path.join(folder,"*."+ext))              
         files.sort(key=lambda x:[int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x)])
         count = 1
         for filename in files:
