@@ -13,13 +13,19 @@ else:
     o = 0
     
 def openfile():
-    global file
-    file = tkinter.filedialog.askopenfilename(filetypes =[('Video', ['*.mp4','*.avi','*.mov','*.mkv','*gif']),('All Files', '*.*')])
-    if file:
-        if len(os.path.basename(file))>=20:
-            open_button.configure(fg_color="grey50", text=os.path.basename(file)[:15]+"..."+os.path.basename(file)[-3:])
+    global file, files, batch_convert
+    files = tkinter.filedialog.askopenfilenames(filetypes =[('Video', ['*.mp4','*.avi','*.mov','*.mkv','*gif']),('All Files', '*.*')])
+    if files:
+        if len(files)==1:
+            file = files[0]
+            if len(os.path.basename(file))>=20:
+                open_button.configure(fg_color="grey50", text=os.path.basename(file)[:15]+"..."+os.path.basename(file)[-3:])               
+            else:
+                open_button.configure(fg_color="grey50", text=os.path.basename(file))
+            batch_convert = False
         else:
-            open_button.configure(fg_color="grey50", text=os.path.basename(file))
+            open_button.configure(fg_color="grey50", text=str(len(files))+" videos selected")
+            batch_convert = True
     else:
         open_button.configure(fg_color=ctk.ThemeManager.theme["CTkButton"]["fg_color"][o], text="Import Video")
 
@@ -36,19 +42,43 @@ def folder_name():
             n+=1
         else:
             break
-        
+
+def process():
+    global file, running
+    if not files:
+        return
+    if batch_convert:
+        res = tkinter.messagebox.askquestion("Extract?", "Do you want to extract the image sequences from these videos?")       
+        if res=="yes":
+            pass
+        else:
+            return     
+        for i in files:
+            if running is False:
+                break
+            file = i
+            open_button.configure(fg_color="grey50", text=str(len(files))+" videos selected \nVideo Number: "+str(files.index(i)+1))
+            convert()
+        open_button.configure(fg_color="grey50", text=str(len(files))+" videos selected")  
+        tkinter.messagebox.showinfo("DONE", "Frames extracted! \nPlease check the respected folders.")
+    else:
+        convert()
+    running = True
+    
 def convert():
     global running
     if not file:
         return
     
     folder_name()
-    res = tkinter.messagebox.askquestion("Extract?", "Do you want to extract the image sequence? \nFolder Name: " + folder)
     
-    if res=="yes":
-        pass
-    else:
-        return
+    if not batch_convert:     
+        res = tkinter.messagebox.askquestion("Extract?", "Do you want to extract the image sequence? \nFolder Name: " + folder)
+        
+        if res=="yes":
+            pass
+        else:
+            return
     
     open_button.configure(state="disabled")
     extract_button.configure(state="disabled")
@@ -67,15 +97,15 @@ def convert():
             ret, frame = cam.read()
             if ret:
                 N = 4
-                name = os.path.join(folder, 'Frame-' + (str(currentframe)).zfill(6) +  "." + targetformat)
+                name = os.path.join(folder, 'Frame-' + (str(currentframe)).zfill(6) +"."+ targetformat)
                 cv2.imwrite(name, frame)
                 currentframe += 1
                 progressbar.set(currentframe/total_frames)
             else:
                 break
-        running = True
         cam.release()
-        tkinter.messagebox.showinfo("DONE", "Frames extracted! \nPlease check the folder: " + folder)
+        if not batch_convert:
+            tkinter.messagebox.showinfo("DONE", "Frames extracted! \nPlease check the folder: " + folder)
     except:
         cam.release()
         tkinter.messagebox.showerror("ERROR", "Something went wrong!")
@@ -93,40 +123,74 @@ def do_popup(event, frame):
         extract_button.configure(state="normal")
         
 def extract_one_frame():
-    if not file:
+    global file
+    if not files:
         return
     
     dialog = ctk.CTkInputDialog(text="Enter Frame Number")
     dialog.title("Extract Specific Frame")
+    
     frame_num = dialog.get_input()
     
     if frame_num is None or frame_num=="":
         return
-
-    if frame_num.isdigit():
-        cam = cv2.VideoCapture(file)
-        total_frames = int(cam.get(cv2.CAP_PROP_FRAME_COUNT))-1
+    
+    if not frame_num.isdigit():
+        tkinter.messagebox.showwarning("!!!", "Frame number not valid!")
+        return
         
-        if int(frame_num)>total_frames:
-            tkinter.messagebox.showwarning("!!!", "Frame number not valid!")
-            cam.release()
+    if batch_convert:
+        save_folder = tkinter.filedialog.askdirectory()
+        if not save_folder:
             return
-        
-        save_as = tkinter.filedialog.asksaveasfilename(filetypes =[('Image', ['*.png','*.jpg','*.bmp'])],
-                                                     initialfile="Untitled."+exportbox.get())
-        try:
-            if save_as:
+
+        extracted = False
+        for i in files:
+            file = i
+            cam = cv2.VideoCapture(file)
+            total_frames = int(cam.get(cv2.CAP_PROP_FRAME_COUNT))-1
+            if int(frame_num)>total_frames:
+                print("Frame Number " + frame_num + " is not available in " + os.path.basename(file))
+                continue
+            save_as = os.path.join(save_folder, os.path.basename(file)[:-4]+"_frame-"+frame_num+"."+exportbox.get())
+            try:
                 cam.set(1, int(frame_num))
                 ret, frame = cam.read()
                 if ret:
                     cv2.imwrite(save_as, frame)
-                tkinter.messagebox.showinfo("DONE", "Frame "+ frame_num +" extracted!")
-            cam.release()
-        except:
-            cam.release()
-            tkinter.messagebox.showerror("ERROR", "Something went wrong!")
-    else:
+                cam.release()
+            except:
+                pass
+            extracted = True
+            
+        if extracted:      
+            tkinter.messagebox.showinfo("DONE", "Frame "+ frame_num +" extracted for the selected videos!")
+        else:
+            tkinter.messagebox.showwarning("!!!", "Frame number not valid for these videos!")
+        return
+    
+    cam = cv2.VideoCapture(file)
+    total_frames = int(cam.get(cv2.CAP_PROP_FRAME_COUNT))-1
+    
+    if int(frame_num)>total_frames:
         tkinter.messagebox.showwarning("!!!", "Frame number not valid!")
+        cam.release()
+        return
+    
+    save_as = tkinter.filedialog.asksaveasfilename(filetypes =[('Image', ['*.png','*.jpg','*.bmp'])],
+                                                 initialfile=os.path.basename(file)[:-4]+"_frame-"+frame_num+"."+exportbox.get())
+    try:
+        if save_as:
+            cam.set(1, int(frame_num))
+            ret, frame = cam.read()
+            if ret:
+                cv2.imwrite(save_as, frame)
+            tkinter.messagebox.showinfo("DONE", "Frame "+ frame_num +" extracted!")
+        cam.release()
+    except:
+        cam.release()
+        tkinter.messagebox.showerror("ERROR", "Something went wrong!")
+        
         
 def stop_process():
     global running
@@ -183,6 +247,7 @@ root.wm_iconbitmap("Programicon.ico")
 root.bind('<Escape>', lambda e: stop_process())
 
 file = ""
+files = ""
 running = True
 
 header = ctk.CTkButton(root, text="VDO TO IMG CONVERTER", fg_color=ctk.ThemeManager.theme["CTkTextbox"]["fg_color"][o],
@@ -200,7 +265,7 @@ exportbox = ctk.CTkComboBox(root, values=exportchoices, state="readonly")
 exportbox.set("png")
 exportbox.grid(row=2, column=1, sticky="we", padx=20)
 
-extract_button = ctk.CTkButton(root, text="EXTRACT", command=lambda: threading.Thread(target=convert).start())
+extract_button = ctk.CTkButton(root, text="EXTRACT", command=lambda: threading.Thread(target=process).start())
 extract_button.grid(row=3, column=1, padx=20, pady=(10,0), sticky="we")
 
 RightClickMenu = tkinter.Menu(root, tearoff=False, background=ctk.ThemeManager.theme["CTkFrame"]["fg_color"][o],
