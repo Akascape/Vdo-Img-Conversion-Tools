@@ -13,31 +13,41 @@ else:
     o = 0
     
 def openfile():
-    global file, folder, base_name
+    global file
     file = tkinter.filedialog.askopenfilename(filetypes =[('Video', ['*.mp4','*.avi','*.mov','*.mkv','*gif']),('All Files', '*.*')])
     if file:
         if len(os.path.basename(file))>=20:
             open_button.configure(fg_color="grey50", text=os.path.basename(file)[:15]+"..."+os.path.basename(file)[-3:])
         else:
             open_button.configure(fg_color="grey50", text=os.path.basename(file))
-            
-        base_name = (os.path.basename(file).split('.')[0])
-        path1 = os.path.dirname(file)
-        folder = path1 + "/" + base_name + "-Image_sequence"
-        
-        n=1
-        while True:
-            if os.path.exists(folder):
-                folder = path1+"/" + base_name + "-Image_sequence_"+str(n)
-                n+=1
-            else:
-                break
     else:
         open_button.configure(fg_color=ctk.ThemeManager.theme["CTkButton"]["fg_color"][o], text="Import Video")
+
+def folder_name():
+    global folder
+    base_name = os.path.basename(file).split('.')[0]
+    path1 = os.path.dirname(file)
+    folder = os.path.join(path1, base_name + "-Image_sequence")
+    
+    n=1
+    while True:
+        if os.path.exists(folder):
+            folder = os.path.join(path1, base_name + "-Image_sequence_"+str(n))
+            n+=1
+        else:
+            break
         
 def convert():
     global running
     if not file:
+        return
+    
+    folder_name()
+    res = tkinter.messagebox.askquestion("Extract?", "Do you want to extract the image sequence? \nFolder Name: " + folder)
+    
+    if res=="yes":
+        pass
+    else:
         return
     
     open_button.configure(state="disabled")
@@ -57,7 +67,7 @@ def convert():
             ret, frame = cam.read()
             if ret:
                 N = 4
-                name = folder + '/Frame-' + (str(currentframe)).zfill(6) +  "." + targetformat
+                name = os.path.join(folder, 'Frame-' + (str(currentframe)).zfill(6) +  "." + targetformat)
                 cv2.imwrite(name, frame)
                 currentframe += 1
                 progressbar.set(currentframe/total_frames)
@@ -65,7 +75,7 @@ def convert():
                 break
         running = True
         cam.release()
-        tkinter.messagebox.showinfo("DONE", "Frames extracted! \nPlease check the folder-" + folder)
+        tkinter.messagebox.showinfo("DONE", "Frames extracted! \nPlease check the folder: " + folder)
     except:
         cam.release()
         tkinter.messagebox.showerror("ERROR", "Something went wrong!")
@@ -75,9 +85,13 @@ def convert():
     extract_button.configure(state="normal")
     
 def do_popup(event, frame):
-    try: frame.tk_popup(event.x_root, event.y_root)
-    finally: frame.grab_release()
-    
+    try:
+        frame.tk_popup(event.x_root, event.y_root)
+        extract_button.configure(state="disabled")
+    finally:
+        frame.grab_release()
+        extract_button.configure(state="normal")
+        
 def extract_one_frame():
     if not file:
         return
