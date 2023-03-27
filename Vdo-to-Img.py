@@ -74,6 +74,45 @@ def convert():
     open_button.configure(state="normal")
     extract_button.configure(state="normal")
     
+def do_popup(event, frame):
+    try: frame.tk_popup(event.x_root, event.y_root)
+    finally: frame.grab_release()
+    
+def extract_one_frame():
+    if not file:
+        return
+    
+    dialog = ctk.CTkInputDialog(text="Enter Frame Number")
+    frame_num = dialog.get_input()
+    
+    if frame_num is None or frame_num=="":
+        return
+
+    if frame_num.isdigit():
+        cam = cv2.VideoCapture(file)
+        total_frames = int(cam.get(cv2.CAP_PROP_FRAME_COUNT))-1
+        
+        if int(frame_num)>total_frames:
+            tkinter.messagebox.showwarning("!!!", "Frame number not valid!")
+            cam.release()
+            return
+        
+        save_as = tkinter.filedialog.asksaveasfilename(filetypes =[('Image', ['*.png','*.jpg','*.bmp'])],
+                                                     initialfile="Untitled."+exportbox.get())
+        try:
+            if save_as:
+                cam.set(1, int(frame_num))
+                ret, frame = cam.read()
+                if ret:
+                    cv2.imwrite(save_as, frame)
+                tkinter.messagebox.showinfo("DONE", "Frame "+ frame_num +" extracted!")
+            cam.release()
+        except:
+            cam.release()
+            tkinter.messagebox.showerror("ERROR", "Something went wrong!")
+    else:
+        tkinter.messagebox.showwarning("!!!", "Frame number not valid!")
+        
 def stop_process():
     global running
     running = False
@@ -148,6 +187,12 @@ exportbox.grid(row=2, column=1, sticky="we", padx=20)
 
 extract_button = ctk.CTkButton(root, text="EXTRACT", command=lambda: threading.Thread(target=convert).start())
 extract_button.grid(row=3, column=1, padx=20, pady=(10,0), sticky="we")
+
+RightClickMenu = tkinter.Menu(root, tearoff=False, background=ctk.ThemeManager.theme["CTkFrame"]["fg_color"][o],
+                              fg=ctk.ThemeManager.theme["CTkLabel"]["text_color"][o], borderwidth=0, bd=0)
+RightClickMenu.add_command(label="Extract specific frame", command=lambda: extract_one_frame())
+
+extract_button.bind("<Button-3>", lambda event: do_popup(event, frame=RightClickMenu))
 
 progressbar = ctk.CTkProgressBar(root, width=100, bg_color="transparent")
 progressbar.set(0)
