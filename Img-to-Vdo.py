@@ -64,7 +64,6 @@ def convert():
             out.write(img)
             count+=1
         out.release()
-        running = True
         tkinter.messagebox.showinfo("DONE", "Video Created: "+final)
     except:
         tkinter.messagebox.showerror("ERROR", "Something went wrong!")
