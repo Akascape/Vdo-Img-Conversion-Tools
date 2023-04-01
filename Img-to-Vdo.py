@@ -48,6 +48,7 @@ def convert():
     ext = os.path.basename(firstitem).split('.')[-1]
     
     try:
+        running = True
         img = cv2.imread(os.path.join(folder, firstitem))
         frameSize = (img.shape)[1::-1]
         fps = int(fps_slider.get())
