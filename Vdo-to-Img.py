@@ -89,6 +89,7 @@ def convert():
     os.mkdir(folder)
     total_frames = int(cam.get(cv2.CAP_PROP_FRAME_COUNT))
     targetformat = exportbox.get()
+    running = True
     
     try:
         while True:
