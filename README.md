@@ -9,5 +9,6 @@
 - For `Vdo-to-Gif Converter`, choose the video and also adjust the FPS and optimization, then simply click the CONVERT button to convert and save it.
 - You can press `Esc` key in order to stop any running conversion process.
 
-<br><p align='center'>![Screenshot](https://user-images.githubusercontent.com/89206401/216770622-821bfc2d-1a63-460d-b006-e036af67ad66.jpg)</p>
+<br><p align='center'>![Screenshot1](https://user-images.githubusercontent.com/89206401/216770622-821bfc2d-1a63-460d-b006-e036af67ad66.jpg)![Screenshot2](https://github.com/Akascape/Vdo-Img-Conversion-Tools/assets/89206401/8efa44f7-c1d2-4f42-91e4-14c3054e5739)</p>
+
 # That's all, thanks!
