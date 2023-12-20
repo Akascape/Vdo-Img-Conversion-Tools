@@ -3,7 +3,6 @@ import customtkinter as ctk
 import os
 import sys
 import glob
-import pkg_resources
 import webbrowser
 import cv2
 import re
