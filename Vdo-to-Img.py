@@ -2,7 +2,6 @@ import tkinter
 import customtkinter as ctk
 import os
 import sys
-import pkg_resources
 import webbrowser
 import cv2
 import threading
